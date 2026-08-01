@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Health Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <h1>Student's Mental Health Portal</h1>
+    </header>
+
+    <section class="content-layout">
+      <div class="right-column">
+        <main class="form-card">
+          <form>
+            <div class="field-group">
+              <label for="age">Age</label>
+              <input id="age" name="age" type="number" placeholder="Enter Your Age" min="0" max="100" step="1" required>
+            </div>
+            <div class="field-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled selected hidden>Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label for="country">Country</label>
+                <select id="country-select" name="country" required>
+                    <option value="" disabled selected hidden>Select</option>
+                    
+                </select>
+            </div>
+            <div class="field-group">
+                <label for="academic_level">Academic Level</label>
+                <select id="academic_level" name="academic_level" required>
+                    <option value="" disabled selected hidden>Select</option>
+                    <option value="High School">High School</option>
+                    <option value="Undergraduate">Undergraduate</option>
+                    <option value="Graduate">Graduate</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label for="most_used_platform">Most Used Platform</label>
+                <select id="most_used_platform" name="most_used_platform" required>
+                    <option value="" disabled selected hidden>Select</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Snapchat">Snapchat</option>
+                    <option value="Twitter">Twitter</option>
+                    <option value="YouTube">YouTube</option>
+                    <option value="TikTok">TikTok</option>
+                    <option value="LINE">LINE</option>
+                    <option value="KakaoTalk">KakaoTalk</option>
+                    <option value="VKontakte">VKontakte</option>
+                    <option value="WhatsApp">WhatsApp</option>
+                    <option value="WeChat">WeChat</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label for="purpose_of_use">Purpose Of Use</label>
+                <select id="purpose_of_use" name="purpose_of_use" required>
+                    <option value="" disabled selected hidden>Select</option>
+                    <option value="Networking">Networking</option>
+                    <option value="Education">Education</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="News">News</option>
+                </select>
+            </div>
+            <div class="field-group">
+              <label for="daily_usage">Average Daily Usage Hours</label>
+              <input id="daily_usage" name="daily_usage" type="number" placeholder="Your Average Daily Usage Hours" min="0" max="24" step="1" required>
+            </div>
+            <div class="field-group">
+              <label for="daily_unlocks">Daily Unlocks</label>
+              <input id="daily_unlocks" name="daily_unlocks" type="number" placeholder="Your Daily Unlocks" min="0" max="10000" step="1" required>
+            </div>
+            <div class="field-group">
+              <label for="study_hours">Study Hours</label>
+              <input id="study_hours" name="study_hours" type="number" placeholder="Study Hours" min="0" max="24" step="1" required>
+            </div>
+            <div class="field-group">
+              <label for="physical_activity_hours">Physical Activity Hours</label>
+              <input id="physical_activity_hours" name="physical_activity_hours" type="number" placeholder="Physical Activity Hours" min="0" max="24" step="1" required>
+            </div>
+            <div class="field-group">
+              <label for="sleep_hours_per_night">Sleep Hours Per Night</label>
+              <input id="sleep_hours_per_night" name="sleep_hours_per_night" type="number" placeholder="Sleep Hours Per Night" min="0" max="24" step="1" required>
+            </div>
+            <div class="field-group">
+                <label for="stress_level">Stress Level</label>
+                <select id="stress_level" name="stress_level" required>
+                    <option value="" disabled selected hidden>Select</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Very High">Very High</option>
+                </select>
+            </div>
+            <button type="submit">Predict Yout Mental Health Score</button>
+          </form>
+        </main>
+      </div>
+    </section>
+
+    <section class="results-area">
+      <div class="results-card">
+        <p class="results-label">Estimated price</p>
+        <h2 class="results-value">₹ 0.00</h2>
+        <p class="results-note">The predicted price is based on historical vehicle data and should be used as a reference only.</p>
+      </div>
+    </section>
+
+    <footer class="site-footer">Made with ❤️ by ak_junior</footer>
+  </div>
+
+  <script>
+    const countries = [
+    "Other",
+    "India",
+    "USA",
+    "Canada",
+    "Australia",
+    "UK",
+    "Germany",
+    "Mexico",
+    "Turkey",
+    "France",
+    "Spain",
+    "Ireland",
+    "Denmark",
+    "Japan",
+    "Switzerland",
+    "Nepal",
+    "Italy",
+    "Russia",
+    "Sri Lanka",
+    "Maldives",
+    "Pakistan",
+    "Bangladesh",
+    "Poland",
+    "South Korea",
+    "China",
+    "Brazil",
+    "Singapore",
+    "New Zealand",
+    "Malaysia",
+    "Netherlands",
+    "UAE",
+    "Finland"
+    ];
+    // To keep the Other at Last Dynamically
+    countries.sort((a, b) => {
+    if (a === "Other") return 1;  // Push "Other" to the end
+    if (b === "Other") return -1; // Keep "Other" at the end
+    return a.localeCompare(b);    // Sort everything else alphabetically
+    });
+    const selectElement = document.getElementById("country-select");
+    countries.forEach(country => {
+    const option = document.createElement("option");
+    option.value = country;
+    option.textContent = country;
+    selectElement.appendChild(option);
+    });
+    const form = document.querySelector('form');
+    const resultValue = document.querySelector('.results-value');
+    async function submitForm(event) {
+      event.preventDefault();
+      resultValue.textContent = 'Wait Predicting Price...';
+
+      const response = await fetch('/predict', {
+        method: 'POST',
+        body: new FormData(form)
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        alert(data.message || 'Prediction failed.');
+        resultValue.textContent = '₹ 0.00';
+        return;
+      }
+
+      resultValue.textContent = data.price;
+    }
+
+    form.addEventListener('submit', submitForm);
+  </script>
+</body>
+</html>
