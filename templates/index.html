@@ -15,7 +15,7 @@
     <section class="content-layout">
       <div class="right-column">
         <main class="form-card">
-          <form>
+          <form id="prediction-form">
             <div class="field-group">
               <label for="age">Age</label>
               <input id="age" name="age" type="number" placeholder="Enter Your Age" min="0" max="100" step="1" required>
@@ -73,8 +73,8 @@
                 </select>
             </div>
             <div class="field-group">
-              <label for="daily_usage">Average Daily Usage Hours</label>
-              <input id="daily_usage" name="daily_usage" type="number" placeholder="Your Average Daily Usage Hours" min="0" max="24" step="1" required>
+              <label for="avg_daily_usage_hours">Average Daily Usage Hours</label>
+              <input id="avg_daily_usage_hours" name="avg_daily_usage_hours" type="number" placeholder="Your Average Daily Usage Hours" min="0" max="24" step="1" required>
             </div>
             <div class="field-group">
               <label for="daily_unlocks">Daily Unlocks</label>
@@ -102,7 +102,7 @@
                     <option value="Very High">Very High</option>
                 </select>
             </div>
-            <button type="submit">Predict Yout Mental Health Score</button>
+            <button type="submit">Predict Your Mental Health Score</button>
           </form>
         </main>
       </div>
@@ -110,9 +110,8 @@
 
     <section class="results-area">
       <div class="results-card">
-        <p class="results-label">Estimated price</p>
-        <h2 class="results-value">₹ 0.00</h2>
-        <p class="results-note">The predicted price is based on historical vehicle data and should be used as a reference only.</p>
+        <p class="results-label">Estimated Score</p>
+        <h2 id="result-display" class="results-value">0.00</h2>
       </div>
     </section>
 
@@ -167,28 +166,64 @@
     option.textContent = country;
     selectElement.appendChild(option);
     });
-    const form = document.querySelector('form');
-    const resultValue = document.querySelector('.results-value');
-    async function submitForm(event) {
-      event.preventDefault();
-      resultValue.textContent = 'Wait Predicting Price...';
-
-      const response = await fetch('/predict', {
-        method: 'POST',
-        body: new FormData(form)
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        alert(data.message || 'Prediction failed.');
-        resultValue.textContent = '₹ 0.00';
-        return;
-      }
-
-      resultValue.textContent = data.price;
-    }
-
+    const form = document.getElementById('prediction-form');
     form.addEventListener('submit', submitForm);
+
+    async function submitForm(event) {
+    // 1. Stop the browser from refreshing the page
+    event.preventDefault();
+
+    // 2. Change your UI text to indicate processing status
+    const displayElement = document.getElementById('result-display');
+    displayElement.innerText = "Predicting price... Please wait.";
+
+    // 3. Extract form data values automatically
+    const formElement = document.getElementById('prediction-form');
+    const formData = new FormData(formElement);
+    const payload = Object.fromEntries(formData.entries());   
+    // 4. CRITICAL: Explicitly parse numbers so FastAPI doesn't freeze or drop a 422 error
+    payload.age = parseInt(payload.age, 10) || 0;
+    payload.avg_daily_usage_hours = parseFloat(payload.avg_daily_usage_hours) || 0.0;
+    payload.daily_unlocks = parseInt(payload.daily_unlocks, 10) || 0;
+    payload.study_hours = parseFloat(payload.study_hours) || 0.0;
+    payload.physical_activity_hours = parseFloat(payload.physical_activity_hours) || 0.0;
+    payload.sleep_hours_per_night = parseFloat(payload.sleep_hours_per_night) || 0.0;
+
+    try {
+        // 5. Send POST request to the backend's /predict endpoint (relative URL,
+        //    works whether the app is served locally or deployed elsewhere)
+        const response = await fetch('/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        // 6. Check if backend threw an error (like a 422 or 500)
+        if (!response.ok) {
+            const errorDetails = await response.json();
+            console.error("Backend Error Details:", errorDetails);
+            displayElement.innerText = `Error (${response.status}): Check developer console for validation issues.`;
+            return;
+        }
+
+        // 7. Parse successful response
+        const data = await response.json();
+        console.log("Success Data:", data);
+        
+        // Adjust 'data.score' or 'data.price' depending on your exact PredictionResponse keys
+        displayElement.innerText = `${data.predicted_mental_health_score} / 10`;
+
+    } catch (error) {
+        // 8. Catch network disconnects, CORS failures, or crashed servers
+        console.error("Network or Submission Error:", error);
+        displayElement.innerText = "Network Error: Could not connect to the backend server.";
+    }
+}
+
+
+
   </script>
 </body>
 </html>
