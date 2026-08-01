@@ -1,0 +1,250 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: #819A91;
+  color: #ffffff;
+}
+
+.app-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px 32px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.content-layout {
+  display: grid;
+  gap: 28px;
+  align-items: start;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.results-area {
+  margin: 32px auto 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 12px;
+}
+
+.results-card {
+  width: min(100%, 560px);
+  background: #000000;
+  border-radius: 28px;
+  padding: 32px 40px;
+  border: 1px solid rgba(159, 225, 203, 0.16);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 190px;
+}
+
+.results-label {
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  color: #ffffff;
+}
+
+.results-value {  
+  margin: 0;
+  font-size: 2rem;
+  color: #f8fafc;
+}
+
+.results-note {
+  margin: 18px auto 0;
+  color: #D85A30;
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 100%;
+  text-align: center;
+  opacity: 0.85;
+}
+
+.site-footer {
+  margin-top: 32px;
+  text-align: center;
+  color: #000000;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(3rem, 5vw, 4.25rem);
+  letter-spacing: -0.04em;
+  color: #000000;
+  font-weight: 800;
+}
+
+.form-card {
+  background: #000000;
+  border-radius: 32px;
+  padding: 40px;
+}
+
+.form-card form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 24px;
+}
+
+.field-group {
+  display: grid;
+  gap: 10px;
+}
+
+.field-group:has(.pill-group),
+.form-card form > button {
+  grid-column: 1 / -1;
+}
+
+label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(159, 225, 203, 0.2);
+  background: rgba(21, 25, 27, 0.6);
+  font-size: 1rem;
+  color: #f8fafc;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239FE1CB'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+}
+
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pill-group input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pill-group label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid #000000;
+  background: rgba(21, 25, 27, 0.6);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  min-width: 110px;
+  text-align: center;
+}
+
+.pill-group input[type="radio"]:checked + label {
+  background: #ffffff;
+  border-color: #fefefe;
+  color: #000000;
+}
+
+.pill-group input[type="radio"] + label:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #F0997B;
+  background: rgba(0, 0, 0, 0.85);
+  box-shadow: 0 0 0 4px rgba(240, 153, 123, 0.18);
+}
+
+button {
+  display: inline-block;
+  width: 100%;
+  padding: .75rem 1.25rem;
+  border-radius: 10rem;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: .15rem;
+  transition: color 1s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  border: none;
+  background: transparent;
+}
+
+button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #D85A30;
+  border-radius: 10rem;
+  z-index: -2;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background-color: #A13A21;
+  transition: width .3s ease;
+  border-radius: 10rem;
+  z-index: -1;
+}
+
+button:hover {
+  color: #ffffff;
+}
+
+button:hover::before {
+  width: 100%;
+}
+
+@media (max-width: 520px) {
+  .form-card form {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell {
+    padding: 32px 16px;
+  }
+}
