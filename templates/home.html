@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Health Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="hero">
+        <h1>Welcome to</h1>
+        <h1 id="portal">Students' Mental Well-being Portal</h1>
+        <hr />
+    </header>
+</div>
+<div class="intro-card">
+    <h2 id="title-info">Mental well-being isn't extra credit. It's the foundation.</h2>
+    <p id="info">Grades, screen time, sleep, deadlines — they all pull on the same thing: you.</p>
+    <p id="info">Take a moment to check in with yourself.</p>
+</div>
+<section class="path-section">
+  <h2 id="info-start">Where would you like to start?</h2>
+ 
+  <div class="path-grid">
+ 
+    <a href="/stress-quiz" class="path-card stress">
+      <div class="path-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21s-7.5-4.6-9.8-9.1C.7 8.2 2.4 4.5 6 4c2.1-.3 3.8.9 6 3.5C14.2 4.9 15.9 3.7 18 4c3.6.5 5.3 4.2 3.8 7.9C19.5 16.4 12 21 12 21z"/>
+        </svg>
+      </div>
+      <p class="path-eyebrow">Stress Quiz</p>
+      <h3 class="path-title">Check your stress level</h3>
+      <p class="path-desc">A quick, 8-question check-in on how the last week or two has actually felt.</p>
+      <div class="path-meta">
+        <span>⏱ ~1 minute</span>
+        <span class="dot"></span>
+        <span>Instant Low / Medium / High / Very High read</span>
+      </div>
+    </a>
+ 
+    <a href="/predict-home" class="path-card score">
+      <div class="path-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 1 9 9"/>
+          <path d="M3 12h4"/>
+          <path d="M12 3v4"/>
+          <path d="M12 12l4.2-4.2"/>
+        </svg>
+      </div>
+      <p class="path-eyebrow">Mental Health Score</p>
+      <h3 class="path-title">Calculate your mental health score</h3>
+      <p class="path-desc">A more detailed look based on your habits — sleep, study time, screen use, and more — powered by a predictive model.</p>
+      <div class="path-meta">
+        <span>⏱ ~3 minutes</span>
+        <span class="dot"></span>
+        <span>Get a personalized score</span>
+      </div>
+    </a>
+ 
+  </div>
+</section>
+ 
+</body>
+<footer class="site-footer">Made with ❤️ by ak_junior</footer>
+</html>
