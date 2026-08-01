@@ -12,7 +12,7 @@
       <h1>Mental Health Score</h1>
     </header>
      <div class="topnav">
-        <a href="/">Go Home</a>
+        <a href="/" style="border-radius: 28px;color: #819A91;margin-bottom: 30px;margin-top: 20px;background-color: black;">↩ Go Home</a>
     </div>
     <section class="content-layout">
       <div class="right-column">
@@ -116,6 +116,13 @@
         <h2 id="result-display" class="results-value">0.00</h2>
       </div>
     </section>
+    <div id="results" class="screen">
+        <p class="band-eyebrow" id="bandEyebrow"></p>
+        <h2 class="band-headline" id="bandHeadline"></h2>
+        <p class="band-body" id="bandBody"></p>
+        <p class="disclaimer" id="disclaimerText"></p>
+        <a href="/predict-home"><button class="btn-primary" id="restartBtn">Take it again</button></a>
+    </div>
 
     <footer class="site-footer">Made with ❤️ by ak_junior</footer>
   </div>
@@ -213,9 +220,9 @@
         // 7. Parse successful response
         const data = await response.json();
         console.log("Success Data:", data);
-        
-        // Adjust 'data.score' or 'data.price' depending on your exact PredictionResponse keys
         displayElement.innerText = `${data.predicted_mental_health_score} / 10`;
+        const score = `${data.predicted_mental_health_score}`;
+        showResults(score);
 
     } catch (error) {
         // 8. Catch network disconnects, CORS failures, or crashed servers
@@ -224,8 +231,45 @@
     }
 }
 
+const bands = [
+  {
+    max: 2.5, key: "needs-support", color: "var(--vhigh)", label: "Needs support",
+    headline: "This score suggests things have been really hard",
+    body: "A low score like this often means several areas — sleep, stress, connection, balance — are all under pressure at once. That's a lot to carry, and it's worth talking to someone soon: a counselor, a doctor, or someone you trust. You don't have to figure this out alone."
+  },
+  {
+    max: 5, key: "getting-by", color: "var(--high)", label: "Getting by",
+    headline: "You're managing, but it's taking a toll",
+    body: "Your habits and stress levels seem to be pulling against your well-being more than supporting it. Small, specific changes — protecting sleep, cutting back screen time before bed, building in real breaks — tend to move this score the most."
+  },
+  {
+    max: 7.5, key: "steady", color: "var(--mid)", label: "Steady",
+    headline: "You're in a reasonably good place",
+    body: "Your habits are mostly working in your favor. There's likely still a specific area — sleep, activity, or screen time — that could use a little attention, but overall this reflects a fairly balanced routine."
+  },
+  {
+    max: 10, key: "thriving", color: "var(--low)", label: "Thriving",
+    headline: "Your habits are genuinely supporting you",
+    body: "This score reflects a strong balance across sleep, activity, and stress management. Whatever you're doing — keep doing it, and notice which habits matter most so you can hold onto them during busier stretches."
+  }
+];
 
+function showResults(score){
+  const pct = Math.round((score / 10) * 100);
+  const band = bands.find(b => score <= b.max);
 
+  document.documentElement.style.setProperty('--band-color', band.color);
+  document.documentElement.style.setProperty('--pct', pct);
+  document.getElementById('bandEyebrow').textContent = band.label;
+  document.getElementById('bandHeadline').textContent = band.headline;
+  document.getElementById('bandBody').textContent = band.body;
+
+  const disclaimer = (band.key === "needs-support" || band.key === "getting-by")
+    ? "This is a reflection tool, not a diagnosis. If you're in crisis or thinking about harming yourself, please reach out to a crisis line or emergency services in your area right away."
+    : "This is a reflection tool, not a diagnosis. If things feel harder than this score suggests, a doctor or counselor can help you look at it more closely.";
+  document.getElementById('disclaimerText').textContent = disclaimer;
+}
+ 
   </script>
 </body>
 </html>
