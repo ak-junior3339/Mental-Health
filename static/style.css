@@ -57,6 +57,8 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-size: 0.78rem;
+  display: flex;
+  justify-content: center;
   color: #ffffff;
 }
 
@@ -64,6 +66,8 @@ body {
   margin: 0;
   font-size: 2rem;
   color: #f8fafc;
+  display: flex;
+  justify-content: center;
 }
 
 .results-note {
