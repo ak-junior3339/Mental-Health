@@ -50,9 +50,15 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def greet(request: Request):
     return templates.TemplateResponse(
         request, 
-        "index.html"
+        "home.html"
     )
 
+@app.get("/predict-home",response_class=HTMLResponse)
+def predictgreet(request : Request):
+    return templates.TemplateResponse(
+        request, 
+        "index.html"
+    )
 @app.post("/predict", response_model=PredictionResponse)
 async def predict_mental_health(data: StudentData):
     input_row = pd.DataFrame([{
