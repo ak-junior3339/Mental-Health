@@ -7,6 +7,7 @@ from typing import Literal
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles 
+import pandas as pd
 app = FastAPI(title="Mental Health" , version="3.0")
 app.add_middleware(
     CORSMiddleware,
@@ -51,3 +52,22 @@ def greet(request: Request):
         request, 
         "index.html"
     )
+
+@app.post("/predict", response_model=PredictionResponse)
+async def predict_mental_health(data: StudentData):
+    input_row = pd.DataFrame([{
+        'Age'                       :data.age,
+        'Gender'                    :data.gender,
+        'Country'                   :data.country,
+        'Academic_Level'            :data.academic_level,
+        'Most_Used_Platform'        :data.most_used_platform,
+        'Purpose_Of_Use'            :data.purpose_of_use,
+        'Avg_Daily_Usage_Hours'     :data.avg_daily_usage_hours,
+        'Daily_Unlocks'             :data.daily_unlocks,
+        'Study_Hours'               :data.study_hours,
+        'Physical_Activity_Hours'   :data.physical_activity_hours,
+        'Sleep_Hours_Per_Night'     :data.sleep_hours_per_night,
+        'Stress_Level'              :data.stress_level
+    }])
+    prediction = model.predict(input_row)[0] 
+    return PredictionResponse(predicted_mental_health_score=round(float(prediction),2))
