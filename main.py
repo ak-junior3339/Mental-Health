@@ -59,6 +59,12 @@ def predictgreet(request : Request):
         request, 
         "index.html"
     )
+@app.get("/stress-quiz",response_class=HTMLResponse)
+def quizgreet(request:Request):
+    return templates.TemplateResponse(
+        request,
+        "quiz.html"
+    )
 @app.post("/predict", response_model=PredictionResponse)
 async def predict_mental_health(data: StudentData):
     input_row = pd.DataFrame([{
