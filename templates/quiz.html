@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stress Check-in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #819A91;
+    --card: black;
+    --ink: #2f8c97;
+    --ink-soft: #2f8c97;
+    --line: #DCE6E2;
+    --low: #6FA98D;
+    --mid: #DDB24E;
+    --high: #DD8452;
+    --vhigh: #B5495B;
+    --band-color: var(--low);
+    --pct: 0;
+  }
+
+  * { box-sizing: border-box; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background-color: #819A91;
+    font-family:'Inter', sans-serif;
+    color: white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 32px 16px;
+  }
+
+  .quiz-shell{
+    width:100%;
+    max-width: 520px;
+  }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: white;
+    margin: 0 0 10px;
+  }
+
+  h1.title{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 5vw, 30px);
+    line-height:1.2;
+    margin: 0 0 8px;
+  }
+
+  .subtitle{
+    color: white;
+    font-size: 14.5px;
+    line-height:1.55;
+    margin: 0 0 28px;
+  }
+
+  .card{
+    background: var(--card);
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 1px 2px #D85A30, 0 12px 32px -16px #D85A30;
+  }
+
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+
+  /* --- intro --- */
+  .intro-list{
+    margin: 0 0 26px;
+    padding: 0;
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .intro-list li{
+    font-size: 14px;
+    color: white;
+    display:flex;
+    gap:10px;
+    align-items:baseline;
+  }
+  .intro-list li::before{
+    content:"";
+    width:6px; height:6px;
+    border-radius:50%;
+    background: white;
+    flex-shrink:0;
+    margin-top:5px;
+  }
+
+  button{
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    border:none;
+    cursor:pointer;
+  }
+
+  .btn-primary{
+    width:100%;
+    background: #D85A30;
+    color: #F5F8F6;
+    padding: 14px 20px;
+    border-radius: 12px;
+    transition: transform 0.15s ease, background 0.2s ease;
+    margin-bottom: 20px;
+  }
+  .btn-primary:hover{ background:#A13A21; }
+  .btn-primary:active{ transform: scale(0.98); }
+  .btn-primary:focus-visible{ outline: 2px solid var(--low); outline-offset: 2px; }
+
+  /* --- breathing progress --- */
+  .breath-track{
+    height: 5px;
+    background: var(--line);
+    border-radius: 999px;
+    overflow:hidden;
+    margin-bottom: 18px;
+  }
+  .breath-fill{
+    height:100%;
+    width:0%;
+    background: linear-gradient(90deg, var(--low), var(--mid));
+    border-radius: 999px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    animation: breathe 3.2s ease-in-out infinite;
+  }
+  @keyframes breathe{
+    0%,100%{ opacity: 0.85; }
+    50%{ opacity: 1; }
+  }
+
+  .q-count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.08em;
+    color: #D85A30;
+    margin: 0 0 14px;
+  }
+
+  h2.q-text{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size: 20px;
+    line-height:1.35;
+    margin: 0 0 22px;
+    min-height: 54px;
+  }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom: 18px;
+  }
+
+  .option{
+    text-align:left;
+    background: #F5F8F6;
+    border:1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-weight:500;
+    color: black;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+  }
+  .option:hover{ border-color: #D85A30; background: #D85A30;color: white; }
+  .option:active{ transform: scale(0.99); }
+  .option:focus-visible{ outline: 2px solid var(--low); outline-offset: 2px; }
+  .option.selected{
+    border-color: #D85A30;
+    background: #D85A30;
+  }
+
+  .nav-row{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+  }
+  .back-btn{
+    background:none;
+    color: #D85A30;
+    padding: 8px 4px;
+    font-weight:500;
+    font-size:13.5px;
+    visibility:hidden;
+    margin-bottom: 10px;
+  }
+  .back-btn.visible{ visibility:visible; }
+  .back-btn:hover{ color: white; }
+
+  /* --- results --- */
+  .gauge-wrap{
+    position:relative;
+    width:180px; height:180px;
+    margin: 4px auto 22px;
+  }
+  .gauge-ring{
+    width:100%; height:100%;
+    border-radius:50%;
+    background: conic-gradient(var(--band-color) calc(var(--pct)*1%), #E4E9E7 0);
+    -webkit-mask: radial-gradient(farthest-side, transparent 63%, #000 64%);
+    mask: radial-gradient(farthest-side, transparent 63%, #000 64%);
+    transition: background 0.6s ease;
+    animation: breathe 3.2s ease-in-out infinite;
+  }
+  .gauge-center{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  #scoreNum{ font-size: 34px; font-weight:600; line-height:1; }
+  .gauge-max{ font-size: 12px; color: var(--ink-soft); margin-top:4px; }
+
+  .band-eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    text-align:center;
+    color: var(--band-color);
+    margin: 0 0 8px;
+    transition: color 0.4s ease;
+  }
+  h2.band-headline{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:22px;
+    text-align:center;
+    margin: 0 0 14px;
+  }
+  .band-body{
+    color: var(--ink-soft);
+    font-size:14.5px;
+    line-height:1.6;
+    text-align:center;
+    margin: 0 0 22px;
+  }
+  .disclaimer{
+    font-size:12px;
+    color: var(--ink-soft);
+    line-height:1.6;
+    text-align:center;
+    border-top: 1px solid var(--line);
+    padding-top:16px;
+    margin: 0 0 22px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .breath-fill, .gauge-ring{ animation:none; }
+    .breath-fill{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz-shell">
+  <p class="eyebrow">Stress check-in : Check your stress level</p>
+  <h1 class="title">How's your week weighing on you?</h1>
+  <p class="subtitle">Eight quick questions, about a minute. Answer with how things have actually felt lately — not how you wish they felt.</p>
+
+  <div class="card">
+
+    <div id="intro" class="screen active">
+      <ul class="intro-list">
+        <li>No right answers, just your honest read on the last week or two</li>
+        <li>Your answers stay on this page — nothing is saved or sent anywhere</li>
+        <li>This is a reflection tool, not a diagnosis</li>
+      </ul>
+      <button class="btn-primary" id="startBtn">Start the quiz</button>
+      <a href="/"><button class="btn-primary" id="startBtn">↩ Go Home</button></a>
+    </div>
+
+    <div id="quiz" class="screen">
+      <div class="breath-track"><div class="breath-fill" id="breathFill"></div></div>
+      <p class="q-count">Question <span id="qNum">1</span> of <span id="qTotal">8</span></p>
+      <h2 class="q-text" id="qText"></h2>
+      <div class="options" id="optionsWrap"></div>
+      <div class="nav-row">
+        <button class="back-btn" id="backBtn">← Back</button>
+      </div>
+      <a href="/"><button class="btn-primary" id="startBtn">↩ Go Home</button></a>
+    </div>
+
+    <div id="results" class="screen">
+      <div class="gauge-wrap">
+        <div class="gauge-ring" id="gaugeRing"></div>
+        <div class="gauge-center">
+          <span id="scoreNum">0</span>
+          <span class="gauge-max">out of 32</span>
+        </div>
+      </div>
+      <p class="band-eyebrow" id="bandEyebrow"></p>
+      <h2 class="band-headline" id="bandHeadline"></h2>
+      <p class="band-body" id="bandBody"></p>
+      <p class="disclaimer" id="disclaimerText"></p>
+      <button class="btn-primary" id="restartBtn">Take it again</button>
+      <a href="/"><button class="btn-primary" id="startBtn">↩ Go Home</button></a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const questions = [
+    { text: "How often have you felt overwhelmed by everything you need to get done?", reverse: false },
+    { text: "How often has it been hard to fall asleep or stay asleep?", reverse: false },
+    { text: "How often have you felt irritable or short-tempered with people around you?", reverse: false },
+    { text: "How often has it been hard to concentrate on a task without your mind drifting to worries?", reverse: false },
+    { text: "How often have you noticed physical tension — tight shoulders, headaches, a knotted stomach?", reverse: false },
+    { text: "How often have you felt anxious about things you can't really control?", reverse: false },
+    { text: "How often have you felt like you don't have time to properly rest or unwind?", reverse: false },
+    { text: "How often have you felt like you had someone to lean on when things got hard?", reverse: true }
+  ];
+
+  const answerOptions = [
+    { label: "Never", value: 0 },
+    { label: "Rarely", value: 1 },
+    { label: "Sometimes", value: 2 },
+    { label: "Often", value: 3 },
+    { label: "Almost always", value: 4 }
+  ];
+
+  const bands = [
+    {
+      max: 8, key: "low", color: "var(--low)", label: "Low",
+      headline: "You seem to be holding steady",
+      body: "Your answers suggest stress isn't weighing heavily on you right now. Keep an eye on the habits that are working — sleep, downtime, people you can talk to — since they're doing real work."
+    },
+    {
+      max: 16, key: "mid", color: "var(--mid)", label: "Medium",
+      headline: "There's some real pressure here",
+      body: "A few areas are pulling at you more than others — maybe sleep, workload, or not having enough downtime. Small, specific changes (even 20 minutes of rest, or an earlier bedtime) tend to help most at this level."
+    },
+    {
+      max: 24, key: "high", color: "var(--high)", label: "High",
+      headline: "You're carrying a heavy load",
+      body: "Several signs point to sustained stress — tension, sleep trouble, feeling stretched thin. It's worth talking this through with someone you trust, whether that's a friend, family member, or a counselor."
+    },
+    {
+      max: 32, key: "vhigh", color: "var(--vhigh)", label: "Very high",
+      headline: "This looks like a lot to carry alone",
+      body: "Your answers suggest stress has been intense and persistent. Please consider reaching out to a mental health professional or someone you trust soon — you don't have to sort through this by yourself."
+    }
+  ];
+
+  let current = 0;
+  let answers = new Array(questions.length).fill(null);
+
+  const introEl = document.getElementById('intro');
+  const quizEl = document.getElementById('quiz');
+  const resultsEl = document.getElementById('results');
+  const qNumEl = document.getElementById('qNum');
+  const qTextEl = document.getElementById('qText');
+  const optionsWrap = document.getElementById('optionsWrap');
+  const breathFill = document.getElementById('breathFill');
+  const backBtn = document.getElementById('backBtn');
+
+  document.getElementById('qTotal').textContent = questions.length;
+
+  function showScreen(el){
+    [introEl, quizEl, resultsEl].forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function renderQuestion(){
+    const q = questions[current];
+    qNumEl.textContent = current + 1;
+    qTextEl.textContent = q.text;
+    breathFill.style.width = ((current) / questions.length * 100) + "%";
+    backBtn.classList.toggle('visible', current > 0);
+
+    optionsWrap.innerHTML = "";
+    answerOptions.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = "option";
+      btn.textContent = opt.label;
+      if (answers[current] === opt.value) btn.classList.add('selected');
+      btn.addEventListener('click', () => selectAnswer(opt.value));
+      optionsWrap.appendChild(btn);
+    });
+  }
+
+  function selectAnswer(value){
+    answers[current] = value;
+    renderQuestion();
+    setTimeout(() => {
+      if (current < questions.length - 1){
+        current++;
+        renderQuestion();
+      } else {
+        breathFill.style.width = "100%";
+        setTimeout(showResults, 250);
+      }
+    }, 300);
+  }
+
+  backBtn.addEventListener('click', () => {
+    if (current > 0){
+      current--;
+      renderQuestion();
+    }
+  });
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    showScreen(quizEl);
+    renderQuestion();
+  });
+
+  function computeScore(){
+    let total = 0;
+    questions.forEach((q, i) => {
+      const v = answers[i] ?? 0;
+      total += q.reverse ? (4 - v) : v;
+    });
+    return total;
+  }
+
+  function showResults(){
+    const score = computeScore();
+    const pct = Math.round((score / 32) * 100);
+    const band = bands.find(b => score <= b.max);
+
+    document.documentElement.style.setProperty('--band-color', band.color);
+    document.documentElement.style.setProperty('--pct', pct);
+
+    document.getElementById('scoreNum').textContent = score;
+    document.getElementById('bandEyebrow').textContent = band.label + " stress";
+    document.getElementById('bandHeadline').textContent = band.headline;
+    document.getElementById('bandBody').textContent = band.body;
+
+    const disclaimer = band.key === "high" || band.key === "vhigh"
+      ? "This is a reflection tool, not a diagnosis. If you're in crisis or thinking about harming yourself, please reach out to a crisis line or emergency services in your area right away."
+      : "This is a reflection tool, not a diagnosis. If stress keeps building, a doctor or counselor can help you look at it more closely.";
+    document.getElementById('disclaimerText').textContent = disclaimer;
+
+    showScreen(resultsEl);
+  }
+
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    current = 0;
+    answers = new Array(questions.length).fill(null);
+    showScreen(introEl);
+  });
+</script>
+
+</body>
+</html>
