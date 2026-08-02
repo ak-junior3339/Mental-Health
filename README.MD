@@ -120,12 +120,12 @@ Each row represents one student, with the following raw fields:
 | `Mental_Health_Score` | Numeric (target) | 0–10 self-reported well-being score |
 
 ### Data Quality Findings (EDA)
-- ✅ No missing values across any column
-- 🔁 2 duplicate rows found and removed
-- ⚠️ `Physical_Activity_Hours` contained invalid negative values (physically impossible for a time unit) — clipped to a minimum of 0
-- 📈 `Study_Hours` was the only heavily right-skewed feature and was log-transformed
-- 🌍 `Country` had a long tail of low-frequency values — countries with ≤10 occurrences were grouped into an `"Other"` bucket to prevent overfitting from rare categories
-- 🎯 Outliers detected via IQR in `Study_Hours` (0.4%) and `Physical_Activity_Hours` (0.44%) — left untouched due to negligible volume
+- No missing values across any column
+- 2 duplicate rows found and removed
+- `Physical_Activity_Hours` contained invalid negative values (physically impossible for a time unit) — clipped to a minimum of 0
+- `Study_Hours` was the only heavily right-skewed feature and was log-transformed
+- `Country` had a long tail of low-frequency values — countries with ≤10 occurrences were grouped into an `"Other"` bucket to prevent overfitting from rare categories
+- Outliers detected via IQR in `Study_Hours` (0.4%) and `Physical_Activity_Hours` (0.44%) — left untouched due to negligible volume
 
 ---
 
